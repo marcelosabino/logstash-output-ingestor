@@ -13,7 +13,7 @@ end
 desc "Get jars"
 task :vendor do
   jar_target = "vendor/jar-dependencies/runtime-jars"
-  kafka_version = "0.9.0.1"
+  kafka_version = "0.8.2.1"
   kafka_url = "http://central.maven.org/maven2/org/apache/kafka/kafka-clients/#{kafka_version}/kafka-clients-#{kafka_version}.jar"
   slf4j_version = "1.6.4"
   slf4j_url = "http://central.maven.org/maven2/org/slf4j/slf4j-api/#{slf4j_version}/slf4j-api-#{slf4j_version}.jar"
@@ -30,7 +30,6 @@ task :vendor do
   `curl #{slf4j_url} -o slf4j-api-#{slf4j_version}.jar`
   puts "Will download #{slf4j_simple_url}"
   `curl #{slf4j_simple_url} -o slf4j-simple-#{slf4j_version}.jar`
-  puts "The project needs openbus.model"
   puts "The project needs openbus.ingestor"
 end
 

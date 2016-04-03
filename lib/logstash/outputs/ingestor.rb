@@ -48,7 +48,7 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
     if ts.nil?
         time = DateTime.now.strftime("%Q")
     else
-        time = DateTime.parse(ts).strftime("%Q")
+        time = ts
     end
 
     record.put("timestamp", time)

@@ -26,6 +26,22 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
     @producer = create_producer
   end
 
+  def parsetimestamp(data)
+      begin
+          if data =~ /(.*)-(.*)/ or data =~/(.*)\/(.*)/
+              return DateTime.parse(data).strftime('%Q')
+          elsif data.length == 13
+              return data
+          elsif data.length == 10
+              return DateTime.parse(Time.at(data.to_i).to_s).strftime('%Q')
+          end
+      rescue TypeError => e
+          logger.error("Exception:", :exception => e)
+          raise e
+      rescue
+      end
+  end
+
   def receive(event)
     if event == LogStash::SHUTDOWN
       return
@@ -48,7 +64,7 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
     if ts.nil?
         time = DateTime.now.strftime("%Q")
     else
-        time = ts
+        time = parsetimestamp(ts)
     end
 
     record.put("timestamp", time)
@@ -62,7 +78,7 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
     record.put("extraInfo", extraInfo)
 
     @producer.ingest(tool, record)
-    @logger.debug(record)
+    @logger.info(record)
     rescue LogStash::ShutdownSignal
       @logger.info("Ingestor output got shutdown signal")
     rescue => e
@@ -74,7 +90,6 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
   def create_producer
     begin
       publisher = Java::BrComOpenbusPublisherKafka::KafkaAvroPublisher.new(brokerList,requiredAcks,isAsync,batchNumMessages)
-      resolvedTool = resolvedTool
       ingestion = Java::BrComProdubanOpenbusIngestor::OpenbusDataIngestion.new(publisher, successTopic, failureTopic)
     rescue => e
       logger.error("Unable to instantiate Insgestor ", :exception => e)

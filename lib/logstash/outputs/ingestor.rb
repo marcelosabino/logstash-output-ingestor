@@ -13,7 +13,7 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
 
   default :codec, "json"
 
-  config :schemaFile, :validate => :string, :required => true
+  config :schemaFile, :validate => :string
   config :brokerList, :validate => :string, :required => true
   config :batchNumMessages, :validate => :string
   config :requiredAcks, :validate => :boolean
@@ -35,7 +35,7 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
           elsif data.length == 10
               return DateTime.parse(Time.at(data.to_i).to_s).strftime('%Q')
           end
-      rescue TypeError => e
+      rescue => e
           logger.error("Exception:", :exception => e)
           raise e
       rescue
@@ -47,20 +47,29 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
       return
     end
 
-    file = Java::JavaIo::File.new(schemaFile)
+    # check schemaFile
+    sf = schemaFile if sf.nil? || sf.empty?
+    if sf.nil?
+      schema = event["schemaFile"]
+    else
+      schema = schemaFile
+    end
+
+    file = Java::JavaIo::File.new(schema)
     schema = Schema::Parser.new().parse(file)
     extraInfo = Java::JavaUtil::HashMap.new
     record = GenericData::Record.new(schema)
     tool = event["tool"]
     fields = schema.getFields
+
+    # fill information
     fields.each do |field|
         fieldName = field.name
         record.put(fieldName, event[fieldName])
     end
 
+    # check timestamp
     ts = event["timestamp"] if ts.nil? || ts.empty?
-    ei = event["extraInfo"] if ei.nil? || ei.empty? 
-
     if ts.nil?
         time = DateTime.now.strftime("%Q")
     else
@@ -69,6 +78,8 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
 
     record.put("timestamp", time)
 
+    # check extraInfo information
+    ei = event["extraInfo"] if ei.nil? || ei.empty?
     if !ei.nil?
         ei.each do |key,value|
             extraInfo.put(key, value)
@@ -82,8 +93,7 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
     rescue LogStash::ShutdownSignal
       @logger.info("Ingestor output got shutdown signal")
     rescue => e
-      @logger.warn("Ingestor output threw exception, restarting",
-                   :exception => e)
+      @logger.warn("Ingestor output threw exception, restarting\nError during processing: #{$!}\nBacktrace:\n\t#{e.backtrace.join("\n\t")}")
     end
 
   private
@@ -92,7 +102,7 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
       publisher = Java::BrComOpenbusPublisherKafka::KafkaAvroPublisher.new(brokerList,requiredAcks,isAsync,batchNumMessages)
       ingestion = Java::BrComProdubanOpenbusIngestor::OpenbusDataIngestion.new(publisher, successTopic, failureTopic)
     rescue => e
-      logger.error("Unable to instantiate Insgestor ", :exception => e)
+      @logger.error("Unable to instantiate Insgestor #{$!}\nBacktrace:\n\t#{e.backtrace.join("\n\t")}")
       raise e
     end
   end

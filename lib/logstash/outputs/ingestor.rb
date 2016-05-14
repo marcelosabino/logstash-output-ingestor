@@ -36,7 +36,7 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
               return DateTime.parse(Time.at(data.to_i).to_s).strftime('%Q')
           end
       rescue => e
-          logger.error("Exception:", :exception => e)
+          @logger.error("Error during processing: #{$!}\rBacktrace:\r\t#{e.backtrace.join("\r\t")}")
           raise e
       rescue
       end
@@ -89,11 +89,11 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
     record.put("extraInfo", extraInfo)
 
     @producer.ingest(tool, record)
-    @logger.info(record)
+    @logger.debug(record)
     rescue LogStash::ShutdownSignal
       @logger.info("Ingestor output got shutdown signal")
     rescue => e
-      @logger.warn("Ingestor output threw exception, restarting\nError during processing: #{$!}\nBacktrace:\n\t#{e.backtrace.join("\n\t")}")
+      @logger.warn("Ingestor output threw exception, restarting\rError during processing: #{$!}\rBacktrace:\r\t#{e.backtrace.join("\r\t")}")
     end
 
   private
@@ -102,7 +102,7 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
       publisher = Java::BrComOpenbusPublisherKafka::KafkaAvroPublisher.new(brokerList,requiredAcks,isAsync,batchNumMessages)
       ingestion = Java::BrComProdubanOpenbusIngestor::OpenbusDataIngestion.new(publisher, successTopic, failureTopic)
     rescue => e
-      @logger.error("Unable to instantiate Insgestor #{$!}\nBacktrace:\n\t#{e.backtrace.join("\n\t")}")
+      @logger.error("Unable to instantiate insgestor #{$!}\rBacktrace:\r\t#{e.backtrace.join("\r\t")}")
       raise e
     end
   end

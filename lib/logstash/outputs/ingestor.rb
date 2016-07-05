@@ -2,22 +2,19 @@
 require "logstash/outputs/base"
 require "logstash/namespace"
 require "java"
-require "avro"
 require "date"
 require "logstash-output-ingestor_jars.rb"
 
 class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
   config_name "ingestor"
-  java_import org.apache.avro.generic.GenericData
-  java_import org.apache.avro.Schema
 
   default :codec, "json"
 
-  config :schemaFile, :validate => :string
-  config :brokerList, :validate => :string, :required => true
-  config :batchNumMessages, :validate => :string
-  config :requiredAcks, :validate => :boolean
-  config :isAsync, :validate => :boolean
+  config :schemaFile, :validate => :string, :required => false
+  config :bootstrap_servers, :validate => :string, :required => true
+  config :batch_size, :validate => :number, :default => 16384
+  config :acks, :validate => ["0", "1", "all"], :default => "1"
+  config :siem, :validate => :boolean, :required => true
   config :successTopic, :validate => :string, :required => true
   config :failureTopic, :validate => :string, :required => true
 
@@ -26,14 +23,22 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
     @producer = create_producer
   end
 
+  def convert(data)
+      if siem
+          return data.to_i
+      else
+          return data
+      end
+  end
+
   def parsetimestamp(data)
       begin
           if data =~ /(.*)-(.*)/ or data =~/(.*)\/(.*)/
-              return DateTime.parse(data).strftime('%Q')
+              return convert(DateTime.parse(data).strftime('%Q'))
           elsif data.length == 13
-              return data
+              return convert(data)
           elsif data.length == 10
-              return DateTime.parse(Time.at(data.to_i).to_s).strftime('%Q')
+              return convert(DateTime.parse(Time.at(data.to_i).to_s).strftime('%Q'))
           end
       rescue => e
           @logger.error("Error during processing: #{$!}\rBacktrace:\r\t#{e.backtrace.join("\r\t")}")
@@ -55,10 +60,10 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
       schema = schemaFile
     end
 
-    file = Java::JavaIo::File.new(schema)
-    schema = Schema::Parser.new().parse(file)
-    extraInfo = Java::JavaUtil::HashMap.new
-    record = GenericData::Record.new(schema)
+    file = java.io.File.new(schema)
+    schema = org.apache.avro.Schema::Parser.new().parse(file)
+    extraInfo = java.util.HashMap.new
+    record = org.apache.avro.generic.GenericData::Record.new(schema)
     tool = event["tool"]
     fields = schema.getFields
 
@@ -71,7 +76,7 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
     # check timestamp
     ts = event["timestamp"] if ts.nil? || ts.empty?
     if ts.nil?
-        time = DateTime.now.strftime("%Q")
+        time = convert(DateTime.now.strftime("%Q"))
     else
         time = parsetimestamp(ts)
     end
@@ -88,8 +93,10 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
 
     record.put("extraInfo", extraInfo)
 
-    @producer.ingest(tool, record)
-    @logger.debug(record)
+    if !tool.nil?
+        @producer.ingest(tool, record)
+        @logger.debug("Ingestiong...\r\t#{record}")
+    end
     rescue LogStash::ShutdownSignal
       @logger.info("Ingestor output got shutdown signal")
     rescue => e
@@ -99,8 +106,24 @@ class LogStash::Outputs::Ingestor < LogStash::Outputs::Base
   private
   def create_producer
     begin
-      publisher = Java::BrComOpenbusPublisherKafka::KafkaAvroPublisher.new(brokerList,requiredAcks,isAsync,batchNumMessages)
-      ingestion = Java::BrComProdubanOpenbusIngestor::OpenbusDataIngestion.new(publisher, successTopic, failureTopic)
+        props = java.util.Properties.new
+        kafka = org.apache.kafka.clients.producer.ProducerConfig
+
+        props.put(kafka::BOOTSTRAP_SERVERS_CONFIG, bootstrap_servers)
+        props.put(kafka::ACKS_CONFIG, acks)
+        props.put(kafka::VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.ByteArraySerializer")
+        props.put(kafka::KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.ByteArraySerializer")
+        props.put(kafka::BATCH_SIZE_CONFIG, batch_size.to_s)
+
+        base = Java::BrComProdubanOpenbusIngestor::OpenbusDataIngestion
+
+        publisher = Java::BrComProdubanOpenbusPublisherKafka::KafkaAvroPublisher.new(props)
+
+        if siem
+            ingestion =  base::OpenbusDataIngestionBuilder.aIngestionConfiguration().withKafkaAvroPublisher(publisher).withSuccessTopic(successTopic).withFailureTopic(failureTopic).withNormalizer(Java::BrComProdubanOpenbusRulesNormalizerServices::LogstashNormalizer.new).build()
+        else
+            ingestion = Java::BrComProdubanOpenbusIngestor::OpenbusDataIngestion.new(publisher, successTopic, failureTopic)
+        end
     rescue => e
       @logger.error("Unable to instantiate insgestor #{$!}\rBacktrace:\r\t#{e.backtrace.join("\r\t")}")
       raise e

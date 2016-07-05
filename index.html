@@ -98,9 +98,9 @@ $ $LOGSTASH_HOME/bin/logstash-plugin uninstall logstash-output-ingestor
 <div class="highlight highlight-sh">
   <pre>
   ingestor {
-    brokerList => "localhost:9092"
-    requiredAcks => true
-    isAsync => true
+    bootstrap_servers => "localhost:9092"
+    schemaFile => "file.avsc"
+    siem => true
     successTopic => "topic.success"
     failureTopic => "topic.failure"
 }

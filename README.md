@@ -1,7 +1,6 @@
 # Logstash Output Plugin to Ingestor
-
-![Build
-Status](http://build-eu-00.elastic.co/view/LS%20Plugins/view/LS%20Outputs/job/logstash-plugin-output-kafka-unit/badge/icon)
+Check http://marcelosabino.github.io/logstash-output-ingestor for more
+information.
 
 This is a plugin for [Logstash](https://github.com/elastic/logstash), used on [OpenbusBR](https://github.com/Produban/OpenbusBR) to output messages to [Ingestor](https://github.com/Produban/OpenbusBR/tree/model-refactoring/openbus.ingestor)
 

@@ -1,93 +1,117 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Logstash output for ingestor</title>
-
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <script src="js/jquery.min.js"></script>
-    <script src="js/scale.fix.js"></script>
-    <script src="js/subnav.js"></script>
-  </head>
-  <body>
-
-  <div id="repo">
-    <a href="https://github.com/marcelosabino/logstash-output-ingestor" target="_blank"><img src="http://i.imgur.com/xeEsyoG.png" alt="" /></a>
-  </div>
-
-  <div id="subnav"></div>
-
-    <div class="wrapper">
-      <section>
-
-<h1 id="logo">
-<a href="#">Logstash Output Ingestor</a>
-</h1>
-
-<!-- Start README -->
-
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec tincidunt facilisis aliquet. Proin vehicula lorem lectus, ac aliquam mauris finibus commodo. Nullam suscipit orci sed dui lobortis tincidunt. Nullam rutrum felis ut mi molestie volutpat. Integer varius tortor vel maximus interdum. Curabitur at massa ultrices, mollis sem vel, luctus neque. Nullam rhoncus consectetur nisl id sodales. Phasellus augue leo, hendrerit eget nisi vel, dignissim condimentum diam. Vestibulum vulputate facilisis augue.</p>
-
-<h2>
-<a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
-
-<ol class="task-list">
-<li><p>Install <a href="https://www.elastic.co/products/logstash">Logstash</a> if not already installed.</p></li>
-<li>
-<p>Install logstash output ingestor plugin.</p>
-
-<div class="highlight highlight-sh"><pre>$ $LOGSTASH_HOME/bin/plugin install logstash-output-ingestor-$VERSION.gem</pre></div>
-</li>
-<li>
-  <p>Check if the installed plugin is listed on the local logstash repo</p>
-
-<div class="highlight highlight-sh">
-  <pre>
-$ $LOGSTASH_HOME/bin/plugin list --verbose | grep ingestor
-</pre></div>
-</li>
-</ol>
-
-<h2>
-<a id="user-content-uninstallation" class="anchor" href="#uninstallation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Uninstallation</h2>
-
-<p>Maecenas mi nibh, scelerisque eu nulla vel, elementum sollicitudin metus. Phasellus gravida pretium felis at sagittis. Phasellus non sapien a dolor viverra consequat</p>
-
-<div class="highlight highlight-sh">
-  <pre>
-$ $LOGSTASH_HOME/bin/logstash-plugin uninstall logstash-output-ingestor
-</pre>
-</div>
-
-<h2>
-<a id="user-content-configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h2>
-
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam a rutrum justo, in semper ex. Aenean molestie quam placerat magna congue ultrices. Donec vehicula mi dui, eu dictum libero lobortis at. Nunc luctus eros vitae ante egestas pellentesque. Nam laoreet molestie vestibulum. Maecenas commodo convallis mauris a rhoncus. Donec euismod sed tortor non tincidunt. Suspendisse ligula erat, bibendum sit amet feugiat in, finibus in ipsum. Morbi tincidunt pulvinar justo, non rhoncus massa. Duis eget justo ut nulla imperdiet molestie. Fusce vitae pretium sem. Nunc malesuada porttitor ipsum et placerat. Quisque augue augue, finibus quis urna venenatis, mattis ullamcorper quam. Aenean convallis massa non lectus suscipit, in porta risus suscipit. Cras sit amet hendrerit elit.
-
-<div class="highlight highlight-sh">
-  <pre>
-  ingestor {
-    bootstrap_servers => "localhost:9092"
-    schemaFile => "file.avsc"
-    siem => true
-    successTopic => "topic.success"
-    failureTopic => "topic.failure"
-}
-  </pre>
-</div>
-
-<h2>
-<a id="user-content-license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
-
-<p>Apache 2.0 Copyright © 2016 <a href="https://about.me/marcelo.sabino">Marcelo Sabino</a></p>
-
-  </body>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <title>Logstash output for ingestor</title>
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/pygment_trac.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <!--[if lt IE 9]>
+            <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/scale.fix.js"></script>
+        <script src="js/subnav.js"></script>
+    </head>
+    <body>
+        <div id="repo">
+            <a href="https://github.com/marcelosabino/logstash-output-ingestor" target="_blank"><img src="http://i.imgur.com/xeEsyoG.png" alt="" /></a>
+        </div>
+        <div id="subnav"></div>
+        <div class="wrapper">
+          <section/>
+        <h1 id="logo">
+            <a href="#">Logstash Output Ingestor</a>
+        </h1>
+        <h2>
+            <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation
+        </h2>
+        <ol class="task-list">
+            <li>
+                <p>Install <a href="https://www.elastic.co/products/logstash">Logstash</a> if not already installed.</p>
+            </li>
+            <li>
+                <p>Install logstash output ingestor plugin.</p>
+                <div class="highlight highlight-sh">
+                    <pre>
+                        # $LOGSTASH_HOME/bin/plugin install /tmp/logstash-output-ingestor-1.0.0.gem
+                          Validating /tmp/logstash-output-ingestor-1.0.0.gem
+                          Installing logstash-output-ingestor
+                          Installation successful
+                    </pre>
+                </div>
+            </li>
+            <li>
+                <p>Check if the installed plugin is listed on the local logstash repo</p>
+                <div class="highlight highlight-sh">
+                    <pre>
+                        # $LOGSTASH_HOME/bin/plugin list --verbose | grep ingestor
+                          logstash-output-ingestor (1.0.0)
+                    </pre>
+                </div>
+            </li>
+        </ol>
+        <h2>
+            <a id="user-content-uninstallation" class="anchor" href="#uninstallation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Uninstallation
+        </h2>
+        <p>To uninstall the plugin, just execute the command below.</p>
+        <div class="highlight highlight-sh">
+            <pre>
+                # $LOGSTASH_HOME/bin/logstash-plugin uninstall logstash-output-ingestor
+                   Uninstalling logstash-output-ingestor
+          </pre>
+        </div>
+        <h2>
+            <a id="user-content-configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration
+        </h2>
+        <p>
+        <h3>
+            bootstrap_servers:(String)
+        </h3>
+        <p>
+            List of kafka servers to be used. The format is "host1:port1,host2:port2".
+        </p>
+        <h3>
+            schemaFile:(String)
+        </h3>
+        <p>
+            Input the complete path where the schema file for the data to be used.
+        </p>
+        <h3>
+            siem:(Boolean)
+        </h3>
+        <p>
+            Configuration that specify if it will use the default normalizer or a specific one, in this case, the logstash normalizer.
+        </p>
+        <h3>
+            successTopic:(String)
+        </h3>
+        <p>
+            Topic that the data will be sent if everything is ok.
+        </p>
+        <h3>
+            failureTopic:(String)
+        </h3>
+        <p>
+            Topic that all data that is not valid will be sent.
+        </p>
+        </p>
+        <div class="highlight highlight-sh">
+            <pre>
+                ingestor {
+                      bootstrap_servers => "localhost:9092"
+                      schemaFile => "file.avsc"
+                      siem => true
+                      successTopic => "topic.success"
+                      failureTopic => "topic.failure"
+                }
+            </pre>
+        </div>
+        <h2>
+            <a id="user-content-license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License
+        </h2>
+        <p>Apache 2.0 Copyright © 2016 <a href="https://about.me/marcelo.sabino">Marcelo Sabino</a></p>
+          </section>
+    </body>
 </html>
-

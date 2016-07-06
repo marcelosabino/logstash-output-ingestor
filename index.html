@@ -67,19 +67,34 @@
         </h2>
         <p>
         <h3>
-            bootstrap_servers:(String)
+            bootstrap_servers:(String) required
         </h3>
         <p>
             List of kafka servers to be used. The format is "host1:port1,host2:port2".
         </p>
         <h3>
-            schemaFile:(String)
+            schemaFile:(String) required
         </h3>
         <p>
             Input the complete path where the schema file for the data to be used.
         </p>
         <h3>
-            siem:(Boolean)
+            batch_size:(Integer) default value: 16384, not required
+        </h3>
+        <p>
+            The producer will attempt to batch records together into fewer requests whenever multiple records are being sent to the same partition. This helps performance on both the client and the server. This configuration controls the default batch size in bytes.
+        </p>
+        <h3>
+          acks:(Integer) default value: 1, not required
+        </h3>
+        <p>
+        acks=0,   the producer will not wait for any acknowledgment from the server at all.<br />
+              acks=1,   This will mean the leader will write the record to its local log but
+              will respond without awaiting full acknowledgement from all followers.<br />
+              acks=all, This means the leader will wait for the full set of in-sync replicas to acknowledge the record.
+        </p>
+        <h3>
+            siem:(Boolean)A required
         </h3>
         <p>
             Configuration that specify if it will use the default normalizer or a specific one, in this case, the logstash normalizer.
@@ -96,12 +111,15 @@
         <p>
             Topic that all data that is not valid will be sent.
         </p>
-        </p>
+
+
         <div class="highlight highlight-sh">
             <pre>
                 ingestor {
                       bootstrap_servers => "localhost:9092"
                       schemaFile => "file.avsc"
+                      batch_size => 16384
+                      acks => 1
                       siem => true
                       successTopic => "topic.success"
                       failureTopic => "topic.failure"

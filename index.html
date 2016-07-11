@@ -67,7 +67,7 @@
             </h2>
             <ol class="task-list">
                 <li>
-                    Install jruby set all the env variables
+                  <p>Install jruby set all the env variablesi</p>
                     <div class="highlight highlight-sh">
                     <pre>
 [root@80afd3eb6108 ~]# set JAVA_HOME=/usr/java/default
@@ -76,7 +76,7 @@
 </pre>
                 </li>
                 <li>
-                    Enter on the logstash-output-ingestor path and execute the command
+                  <p>Enter on the logstash-output-ingestor path and execute the command</p>
                     <div class="highlight highlight-sh">
                     <pre>
 [root@80afd3eb6108 ~]# gem install bundle
@@ -89,7 +89,7 @@ Successfully installed bundle-0.0.1
 </pre>
                 </li>
                 <li>
-                    Then enter on the folder of logstash-output-ingestor and execute the command
+                  <p>Then enter on the folder of logstash-output-ingestor and execute the command</p>
                     <div class="highlight highlight-sh">
                     <pre>
 [root@80afd3eb6108 logstash-output-ingestor]# bundle install
@@ -147,7 +147,7 @@ Use `bundle show [gemname]` to see where a bundled gem is installed.
 </pre>
                 </li>
                 <li>
-                    Then use the rake command to get all java dependencies
+                  <p>Then use the rake command to get all java dependencies</p>
                     <div class="highlight highlight-sh">
                     <pre>
 [root@80afd3eb6108 logstash-output-ingestor]# rake install_jars
@@ -170,15 +170,14 @@ Tasks: TOP => install_jars
 (See full trace by running task with --trace)
 [root@80afd3eb6108 logstash-output-ingestor]# 
 </pre>
-                    If you get this error, just comment this line on the file logstash-output-ingestor.gemspec and execute again the command above.
+<p>If you get this error, just comment this line on the file logstash-output-ingestor.gemspec and execute again the command above.</p>
                     <div class="highlight highlight-sh">
                     <pre>
 #  s.requirements << "jar 'br.com.produban:openbus.ingestor', '0.0.1-SNAPSHOT'"
 </pre>
                 </li>
                 <li>
-                    Then copy the openbus.ingestor-0.0.1-SNAPSHOT.jar to the folder logstash-output-ingestor/vendor/jar-dependencies/runtime-jars and
-                    execute the command
+                  <p>Then copy the openbus.ingestor-0.0.1-SNAPSHOT.jar to the folder logstash-output-ingestor/vendor/jar-dependencies/runtime-jars and execute the command</p>
                     <div class="highlight highlight-sh">
                     <pre>
 [root@80afd3eb6108 logstash-output-ingestor]# gem build logstash-output-ingestor.gemspec 
@@ -190,7 +189,7 @@ Tasks: TOP => install_jars
 </pre>
                 </li>
                 <li>
-                    Check if the file was created
+                  <p>Check if the file was created</p>
                     <div class="highlight highlight-sh">
                     <pre>
 [root@80afd3eb6108 logstash-output-ingestor]# ls -lah
@@ -211,7 +210,7 @@ drwxr-xr-x 3 root root 4.0K Jul 11 19:24 vendor
 </pre>
                 </li>
                 <li>
-                    Done
+                  <p>Done</p>
                 </li>
             </ol>
             <h2>

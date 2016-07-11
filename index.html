@@ -35,10 +35,10 @@
                     <p>Install logstash output ingestor plugin.</p>
                     <div class="highlight highlight-sh">
                         <pre>
-                        # $LOGSTASH_HOME/bin/plugin install /tmp/logstash-output-ingestor-1.0.0.gem
-                          Validating /tmp/logstash-output-ingestor-1.0.0.gem
-                          Installing logstash-output-ingestor
-                          Installation successful
+# $LOGSTASH_HOME/bin/plugin install /tmp/logstash-output-ingestor-1.0.0.gem
+  Validating /tmp/logstash-output-ingestor-1.0.0.gem
+  Installing logstash-output-ingestor
+  Installation successful
                     </pre>
                     </div>
                 </li>
@@ -46,8 +46,8 @@
                     <p>Check if the installed plugin is listed on the local logstash repo</p>
                     <div class="highlight highlight-sh">
                         <pre>
-                        # $LOGSTASH_HOME/bin/plugin list --verbose | grep ingestor
-                          logstash-output-ingestor (1.0.0)
+# $LOGSTASH_HOME/bin/plugin list --verbose | grep ingestor
+  logstash-output-ingestor (1.0.0)
                     </pre>
                     </div>
                 </li>
@@ -58,8 +58,8 @@
             <p>To uninstall the plugin, just execute the command below.</p>
             <div class="highlight highlight-sh">
                 <pre>
-                # $LOGSTASH_HOME/bin/logstash-plugin uninstall logstash-output-ingestor
-                   Uninstalling logstash-output-ingestor
+# $LOGSTASH_HOME/bin/logstash-plugin uninstall logstash-output-ingestor
+   Uninstalling logstash-output-ingestor
           </pre>
             </div>
             <h2>
@@ -265,15 +265,15 @@ drwxr-xr-x 3 root root 4.0K Jul 11 19:24 vendor
             </p>
             <div class="highlight highlight-sh">
                 <pre>
-                ingestor {
-                      bootstrap_servers => "localhost:9092"
-                      schemaFile => "file.avsc"
-                      batch_size => 16384
-                      acks => 1
-                      siem => true
-                      successTopic => "topic.success"
-                      failureTopic => "topic.failure"
-                }
+ingestor {
+      bootstrap_servers => "localhost:9092"
+      schemaFile => "file.avsc"
+      batch_size => 16384
+      acks => 1
+      siem => true
+      successTopic => "topic.success"
+      failureTopic => "topic.failure"
+}
             </pre>
             </div>
             <h2>

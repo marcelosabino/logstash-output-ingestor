@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="css/pygment_trac.css">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <!--[if lt IE 9]>
-            <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
         <script src="js/jquery.min.js"></script>
         <script src="js/scale.fix.js"></script>
@@ -20,101 +20,251 @@
         </div>
         <div id="subnav"></div>
         <div class="wrapper">
-          <section/>
-        <h1 id="logo">
-            <a href="#">Logstash Output Ingestor</a>
-        </h1>
-        <h2>
-            <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation
-        </h2>
-        <ol class="task-list">
-            <li>
-                <p>Install <a href="https://www.elastic.co/products/logstash">Logstash</a> if not already installed.</p>
-            </li>
-            <li>
-                <p>Install logstash output ingestor plugin.</p>
-                <div class="highlight highlight-sh">
-                    <pre>
+        <section/>
+            <h1 id="logo">
+                <a href="#">Logstash Output Ingestor</a>
+            </h1>
+            <h2>
+                <a id="user-content-installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation
+            </h2>
+            <ol class="task-list">
+                <li>
+                    <p>Install <a href="https://www.elastic.co/products/logstash">Logstash</a> if not already installed.</p>
+                </li>
+                <li>
+                    <p>Install logstash output ingestor plugin.</p>
+                    <div class="highlight highlight-sh">
+                        <pre>
                         # $LOGSTASH_HOME/bin/plugin install /tmp/logstash-output-ingestor-1.0.0.gem
                           Validating /tmp/logstash-output-ingestor-1.0.0.gem
                           Installing logstash-output-ingestor
                           Installation successful
                     </pre>
-                </div>
-            </li>
-            <li>
-                <p>Check if the installed plugin is listed on the local logstash repo</p>
-                <div class="highlight highlight-sh">
-                    <pre>
+                    </div>
+                </li>
+                <li>
+                    <p>Check if the installed plugin is listed on the local logstash repo</p>
+                    <div class="highlight highlight-sh">
+                        <pre>
                         # $LOGSTASH_HOME/bin/plugin list --verbose | grep ingestor
                           logstash-output-ingestor (1.0.0)
                     </pre>
-                </div>
-            </li>
-        </ol>
-        <h2>
-            <a id="user-content-uninstallation" class="anchor" href="#uninstallation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Uninstallation
-        </h2>
-        <p>To uninstall the plugin, just execute the command below.</p>
-        <div class="highlight highlight-sh">
-            <pre>
+                    </div>
+                </li>
+            </ol>
+            <h2>
+                <a id="user-content-uninstallation" class="anchor" href="#uninstallation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Uninstallation
+            </h2>
+            <p>To uninstall the plugin, just execute the command below.</p>
+            <div class="highlight highlight-sh">
+                <pre>
                 # $LOGSTASH_HOME/bin/logstash-plugin uninstall logstash-output-ingestor
                    Uninstalling logstash-output-ingestor
           </pre>
-        </div>
-        <h2>
-            <a id="user-content-configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration
-        </h2>
-        <p>
-        <h3>
-            bootstrap_servers:(String) required
-        </h3>
-        <p>
-            List of kafka servers to be used. The format is "host1:port1,host2:port2".
-        </p>
-        <h3>
-            schemaFile:(String) required
-        </h3>
-        <p>
-            Input the complete path where the schema file for the data to be used.
-        </p>
-        <h3>
-            batch_size:(Integer) default value: 16384, not required
-        </h3>
-        <p>
-            The producer will attempt to batch records together into fewer requests whenever multiple records are being sent to the same partition. This helps performance on both the client and the server. This configuration controls the default batch size in bytes.
-        </p>
-        <h3>
-          acks:(Integer) default value: 1, not required
-        </h3>
-        <p>
-        acks=0,   the producer will not wait for any acknowledgment from the server at all.<br />
-              acks=1,   This will mean the leader will write the record to its local log but
-              will respond without awaiting full acknowledgement from all followers.<br />
-              acks=all, This means the leader will wait for the full set of in-sync replicas to acknowledge the record.
-        </p>
-        <h3>
-            siem:(Boolean)A required
-        </h3>
-        <p>
-            Configuration that specify if it will use the default normalizer or a specific one, in this case, the logstash normalizer.
-        </p>
-        <h3>
-            successTopic:(String)
-        </h3>
-        <p>
-            Topic that the data will be sent if everything is ok.
-        </p>
-        <h3>
-            failureTopic:(String)
-        </h3>
-        <p>
-            Topic that all data that is not valid will be sent.
-        </p>
-
-
-        <div class="highlight highlight-sh">
-            <pre>
+            </div>
+            <h2>
+                <a id="user-content-configuration" class="anchor" href="#development" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development Setup
+            </h2>
+            <ol class="task-list">
+                <li>
+                    Install jruby set all the env variables
+                    <div class="highlight highlight-sh">
+                    <pre>
+[root@80afd3eb6108 ~]# set JAVA_HOME=/usr/java/default
+[root@80afd3eb6108 ~]# set JRUBY_HOME=/opt/jruby
+[root@80afd3eb6108 ~]# set PATH=$JAVA_HOME/bin:$JRUBY_HOME/bin:$PATH
+</pre>
+                </li>
+                <li>
+                    Enter on the logstash-output-ingestor path and execute the command
+                    <div class="highlight highlight-sh">
+                    <pre>
+[root@80afd3eb6108 ~]# gem install bundle
+Fetching: bundler-1.12.5.gem (100%)
+Successfully installed bundler-1.12.5
+Fetching: bundle-0.0.1.gem (100%)
+Successfully installed bundle-0.0.1
+2 gems installed
+[root@80afd3eb6108 ~]#
+</pre>
+                </li>
+                <li>
+                    Then enter on the folder of logstash-output-ingestor and execute the command
+                    <div class="highlight highlight-sh">
+                    <pre>
+[root@80afd3eb6108 logstash-output-ingestor]# bundle install
+Don't run Bundler as root. Bundler can ask for sudo if it is needed, and
+installing your bundle as root will break this application for all non-root
+users on this machine.
+Fetching gem metadata from https://rubygems.org/
+Fetching version metadata from https://rubygems.org/
+Fetching dependency metadata from https://rubygems.org/
+Resolving dependencies.........................
+Installing rake 11.2.2
+Installing cabin 0.8.1
+Installing clamp 0.6.5
+Installing coderay 1.1.1
+Installing concurrent-ruby 0.9.2
+Installing diff-lcs 1.2.5
+Installing ffi 1.9.13
+Installing filesize 0.0.4
+Installing fivemat 1.3.2
+Installing gem_publisher 1.5.0
+Installing gems 0.8.3
+Installing i18n 0.6.9
+Installing insist 1.0.0
+Installing jar-dependencies 0.3.4
+Installing jrjackson 0.3.9
+Installing jruby-openssl 0.9.13
+Installing kramdown 1.11.1
+Installing logstash-core-event 2.3.4
+Installing minitar 0.5.4
+Installing method_source 0.8.2
+Installing slop 3.6.0
+Installing rubyzip 1.1.7
+Installing stud 0.0.22
+Installing thread_safe 0.3.5
+Installing polyglot 0.3.5
+Installing rspec-support 3.5.0
+Installing ruby-maven-libs 3.3.9
+Installing bundler 1.12.5
+Installing spoon 0.0.4
+Installing treetop 1.4.15
+Installing rspec-core 3.5.1
+Installing rspec-expectations 3.5.0
+Installing rspec-mocks 3.5.0
+Installing pry 0.10.4
+Installing rspec 3.5.0
+Installing logstash-core 2.3.4
+Installing rspec-wait 0.0.9
+Installing logstash-core-plugin-api 1.20.0
+Installing logstash-devutils 0.0.22
+Installing logstash-codec-json 2.1.4
+Installing logstash-output-ingestor 2.0.0 from source at `.`
+Bundle complete! 4 Gemfile dependencies, 40 gems now installed.
+Use `bundle show [gemname]` to see where a bundled gem is installed.
+[root@80afd3eb6108 logstash-output-ingestor]#
+</pre>
+                </li>
+                <li>
+                    Then use the rake command to get all java dependencies
+                    <div class="highlight highlight-sh">
+                    <pre>
+[root@80afd3eb6108 logstash-output-ingestor]# rake install_jars
+  jar dependencies for logstash-output-ingestor-2.0.0.gemspec . . .
+      org.apache.kafka:kafka-clients:0.8.2.1:compile
+      org.slf4j:slf4j-api:1.6.4:compile
+      org.slf4j:slf4j-simple:1.6.4:compile
+      br.com.produban:openbus.ingestor:0.0.1-SNAPSHOT:compile
+[ERROR] Failed to execute goal on project jars: Could not resolve dependencies for project no_group_id_given:jars:jar:0.0.0: Could not find artifact br.com.produban:openbus.ingestor:jar:0.0.1-SNAPSHOT -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/DependencyResolutionException
+rake aborted!
+Errno::ENOENT: No such file or directory - /root/logstash-output-ingestor/deps.lst
+/root/logstash-output-ingestor/Rakefile:11:in `block in (root)'
+Tasks: TOP => install_jars
+(See full trace by running task with --trace)
+[root@80afd3eb6108 logstash-output-ingestor]# 
+</pre>
+                    If you get this error, just comment this line on the file logstash-output-ingestor.gemspec and execute again the command above.
+                    <div class="highlight highlight-sh">
+                    <pre>
+#  s.requirements << "jar 'br.com.produban:openbus.ingestor', '0.0.1-SNAPSHOT'"
+</pre>
+                </li>
+                <li>
+                    Then copy the openbus.ingestor-0.0.1-SNAPSHOT.jar to the folder logstash-output-ingestor/vendor/jar-dependencies/runtime-jars and
+                    execute the command
+                    <div class="highlight highlight-sh">
+                    <pre>
+[root@80afd3eb6108 logstash-output-ingestor]# gem build logstash-output-ingestor.gemspec 
+  Successfully built RubyGem
+  Name: logstash-output-ingestor
+  Version: 2.0.0
+  File: logstash-output-ingestor-2.0.0.gem
+[root@80afd3eb6108 logstash-output-ingestor]# 
+</pre>
+                </li>
+                <li>
+                    Check if the file was created
+                    <div class="highlight highlight-sh">
+                    <pre>
+[root@80afd3eb6108 logstash-output-ingestor]# ls -lah
+total 2.1M
+drwxr-xr-x 5 1000 1001 4.0K Jul 11 19:27 .
+dr-xr-x--- 8 root root 4.0K Jul 11 19:17 ..
+-rw-r--r-- 1 1000 1001   38 Jul 11 19:01 Gemfile
+-rw-r--r-- 1 root root 2.4K Jul 11 19:09 Gemfile.lock
+-rw-r--r-- 1 1000 1001    0 Jul 11 19:01 LICENSE
+-rw-r--r-- 1 1000 1001  508 Jul 11 19:01 README.md
+-rw-r--r-- 1 1000 1001  259 Jul 11 19:01 Rakefile
+drwxr-xr-x 5 1000 1001 4.0K Jul 11 19:24 lib
+-rw-r--r-- 1 root root 2.1M Jul 11 19:28 logstash-output-ingestor-2.0.0.gem
+-rw-r--r-- 1 1000 1001 1.6K Jul 11 19:27 logstash-output-ingestor.gemspec
+drwxr-xr-x 3 1000 1001 4.0K Jul 11 19:01 spec
+drwxr-xr-x 3 root root 4.0K Jul 11 19:24 vendor
+[root@80afd3eb6108 logstash-output-ingestor]# 
+</pre>
+                </li>
+                <li>
+                    Done
+                </li>
+            </ol>
+            <h2>
+                <a id="user-content-configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration
+            </h2>
+            <p>
+            <h3>
+                bootstrap_servers:(String) required
+            </h3>
+            <p>
+                List of kafka servers to be used. The format is "host1:port1,host2:port2".
+            </p>
+            <h3>
+                schemaFile:(String) required
+            </h3>
+            <p>
+                Input the complete path where the schema file for the data to be used.
+            </p>
+            <h3>
+                batch_size:(Integer) default value: 16384, not required
+            </h3>
+            <p>
+                The producer will attempt to batch records together into fewer requests whenever multiple records are being sent to the same partition. This helps performance on both the client and the server. This configuration controls the default batch size in bytes.
+            </p>
+            <h3>
+                acks:(Integer) default value: 1, not required
+            </h3>
+            <p>
+                acks=0,   the producer will not wait for any acknowledgment from the server at all.<br />
+                acks=1,   This will mean the leader will write the record to its local log but
+                will respond without awaiting full acknowledgement from all followers.<br />
+                acks=all, This means the leader will wait for the full set of in-sync replicas to acknowledge the record.
+            </p>
+            <h3>
+                siem:(Boolean)A required
+            </h3>
+            <p>
+                Configuration that specify if it will use the default normalizer or a specific one, in this case, the logstash normalizer.
+            </p>
+            <h3>
+                successTopic:(String)
+            </h3>
+            <p>
+                Topic that the data will be sent if everything is ok.
+            </p>
+            <h3>
+                failureTopic:(String)
+            </h3>
+            <p>
+                Topic that all data that is not valid will be sent.
+            </p>
+            <div class="highlight highlight-sh">
+                <pre>
                 ingestor {
                       bootstrap_servers => "localhost:9092"
                       schemaFile => "file.avsc"
@@ -125,11 +275,11 @@
                       failureTopic => "topic.failure"
                 }
             </pre>
-        </div>
-        <h2>
-            <a id="user-content-license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License
-        </h2>
-        <p>Apache 2.0 Copyright © 2016 <a href="https://about.me/marcelo.sabino">Marcelo Sabino</a></p>
-          </section>
+            </div>
+            <h2>
+                <a id="user-content-license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License
+            </h2>
+            <p>Apache 2.0 Copyright © 2016 <a href="https://about.me/marcelo.sabino">Marcelo Sabino</a></p>
+        </section>
     </body>
 </html>
